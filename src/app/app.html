@@ -232,6 +232,16 @@
       </svg>
       <h1>Hello, {{ title() }}</h1>
       <p>Congratulations! Your app is running. 🎉</p>
+      <h1>NgRx Todo App</h1>
+      <input [(ngModel)]="newTodo" placeholder="Add todo" />
+      <button (click)="add()">Add</button>
+      <ul>
+        <li *ngFor="let todo of todos$ | async">
+          <span [style.textDecoration]="todo.done ? 'line-through' : 'none'">{{todo.title}}</span>
+          <button (click)="toggle(todo.id)">Toggle</button>
+          <button (click)="remove(todo.id)">Delete</button>
+        </li>
+      </ul>
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">

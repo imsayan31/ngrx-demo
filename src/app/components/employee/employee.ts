@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {EmployeeService} from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
 import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EmployeePage} from '../../models/employee-page.model';
 
 @Component({
   selector: 'app-employee',
@@ -14,6 +15,9 @@ export class EmployeeComponent implements OnInit {
   employees: Employee[] = [];
   employeeForm: FormGroup;
   editingEmployeeId: number | null = null;
+  currentPage: number = 0;
+  pageSize: number = 5;
+  totalPages: number = 0;
 
   constructor(
     private employeeService: EmployeeService,
@@ -32,14 +36,14 @@ export class EmployeeComponent implements OnInit {
   }
 
   loadEmployees(): void {
-    this.employeeService.getEmployees().subscribe({
-      next: (data: Employee[]) => {
-        this.employees = data;
+    this.employeeService.getEmployees(this.currentPage).subscribe({
+      next: (data: EmployeePage) => {
+        this.employees = data.content;
+        this.totalPages = data.totalPages;
+        this.currentPage = data.number;
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.error('Error loading employees:', error);
-      }
+      error: (error) => console.error('Error loading employees:', error)
     });
   }
 
@@ -104,5 +108,19 @@ export class EmployeeComponent implements OnInit {
       },
       error: (error) => console.error('Error deleting employee:', error)
     });
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.loadEmployees();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadEmployees();
+    }
   }
 }

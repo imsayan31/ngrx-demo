@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {Employee} from '../models/employee.model';
 import {EmployeeRequest} from '../models/employee-request.model';
+import {EmployeePage} from '../models/employee-page.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +14,10 @@ export class EmployeeService {
 
   constructor(private _http: HttpClient) {}
 
-  getEmployees() {
-    return this._http.get<Employee[]>(`${this.apiUrl}/employees`);
+  getEmployees(page: number = 0, size: number = 5) {
+    return this._http.get<EmployeePage>(
+      `${this.apiUrl}/employees?page=${page}&size=${size}`
+    );
   }
 
   createEmployee(employee: EmployeeRequest) {

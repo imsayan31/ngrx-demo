@@ -1,0 +1,45 @@
+<h2>Add Employee</h2>
+
+<form [formGroup]="employeeForm" (ngSubmit)="createEmployee()">
+  <div>
+    <label>Name</label>
+    <input type="text" formControlName="name">
+  </div>
+
+  <div>
+    <label>Department</label>
+    <input type="text" formControlName="department">
+  </div>
+
+  <div>
+    <label>Salary</label>
+    <input type="number" formControlName="salary">
+  </div>
+
+  <button type="submit">{{ editingEmployeeId ? 'Edit' : 'Add' }} Employee</button>
+</form>
+
+<table>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th>Department</th>
+    <th>Salary</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+    @for (employee of employees; track $index) {
+      <tr>
+        <td>{{ employee.name }}</td>
+        <td>{{ employee.dept }}</td>
+        <td>{{ employee.salary }}</td>
+        <td>
+          <button type="button" (click)="editEmployee(employee)">Edit</button>
+          |
+          <button type="button" (click)="deleteEmployee(employee.id)">Delete</button>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

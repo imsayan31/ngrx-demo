@@ -8,10 +8,11 @@ import { addTodo, deleteTodo, toggleTodo } from './store/todos.actions';
 import { selectTodos } from './store/todos.selectors';
 import { Todo } from './store/todos.reducer';
 import {EmployeeComponent} from './components/employee/employee';
+import {LoginComponent} from './components/login/login';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FormsModule, RouterOutlet, EmployeeComponent],
+  imports: [CommonModule, FormsModule, RouterOutlet, EmployeeComponent, LoginComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

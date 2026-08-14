@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../services/auth';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent {
   password = '';
   message = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   login(): void {
     this.authService.login(
@@ -26,7 +27,7 @@ export class LoginComponent {
         this.message = `${response.message} login successful`;
         // We'll store the JWT here in the next step
         this.authService.saveToken(response.token);
-        console.log('JWT:', response.token);
+        this.router.navigate(["/employees"]);
       },
       error: (error) => {
         console.error('Login failed:', error);

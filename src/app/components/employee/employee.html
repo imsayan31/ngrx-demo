@@ -1,5 +1,7 @@
+<button type="button" (click)="logout()">
+  Logout
+</button>
 <h2>Add Employee</h2>
-
 <form [formGroup]="employeeForm" (ngSubmit)="createEmployee()">
   <div>
     <label>Name</label>

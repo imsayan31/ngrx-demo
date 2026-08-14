@@ -1,8 +1,10 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {EmployeeService} from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
 import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EmployeePage} from '../../models/employee-page.model';
+import {AuthService} from '../../services/auth';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-employee',
@@ -18,6 +20,8 @@ export class EmployeeComponent implements OnInit {
   currentPage: number = 0;
   pageSize: number = 5;
   totalPages: number = 0;
+  authService = inject(AuthService);
+  router = inject(Router);
 
   constructor(
     private employeeService: EmployeeService,
@@ -122,5 +126,10 @@ export class EmployeeComponent implements OnInit {
       this.currentPage--;
       this.loadEmployees();
     }
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

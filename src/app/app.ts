@@ -12,7 +12,7 @@ import {LoginComponent} from './components/login/login';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FormsModule, RouterOutlet, EmployeeComponent, LoginComponent],
+  imports: [CommonModule, FormsModule, RouterOutlet, EmployeeComponent, LoginComponent, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

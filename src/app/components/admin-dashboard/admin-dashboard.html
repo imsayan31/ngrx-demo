@@ -1,0 +1,118 @@
+<div class="dashboard">
+
+  <!-- Dashboard Header -->
+  <section class="dashboard-header">
+
+    <div>
+      <h1>Admin Dashboard</h1>
+
+      <p>
+        Welcome back, {{ username }} 👋
+      </p>
+    </div>
+
+    <div class="role-badge">
+      {{ role }}
+    </div>
+
+  </section>
+
+
+  <!-- Statistics -->
+  <section class="statistics-grid">
+
+    @for (stat of statistics; track stat.title) {
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          {{ stat.icon }}
+        </div>
+
+        <div class="stat-info">
+
+          <span class="stat-title">
+            {{ stat.title }}
+          </span>
+
+          <span class="stat-value">
+            {{ stat.value }}
+          </span>
+
+        </div>
+
+      </div>
+
+    }
+
+  </section>
+
+
+  <!-- Lower Dashboard -->
+  <section class="dashboard-grid">
+
+    <!-- Recent Activity -->
+    <div class="dashboard-card">
+
+      <div class="card-header">
+        <div>
+          <h2>Recent Activity</h2>
+          <span>Latest system activities</span>
+        </div>
+      </div>
+
+      <div class="activity-list">
+
+        @for (activity of recentActivities; track activity) {
+
+          <div class="activity-item">
+
+            <span class="activity-dot"></span>
+
+            <span class="activity-text">
+              {{ activity }}
+            </span>
+
+          </div>
+
+        }
+
+      </div>
+
+    </div>
+
+
+    <!-- Quick Actions -->
+    <div class="dashboard-card">
+
+      <div class="card-header">
+        <div>
+          <h2>Quick Actions</h2>
+          <span>Frequently used actions</span>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+
+        <button class="action-button">
+          <span>+</span>
+          Add Employee
+        </button>
+
+        <button class="action-button">
+          <span>+</span>
+          Add Department
+        </button>
+
+        <button class="action-button">
+          <span>+</span>
+          Add User
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

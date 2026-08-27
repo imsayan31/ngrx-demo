@@ -13,6 +13,13 @@ interface LoginResponse {
   token: string;
 }
 
+interface JwtPayload {
+  sub: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -40,6 +47,60 @@ export class AuthService {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getRole(): string | null {
+    const token = this.getToken();
+
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = JSON.parse(
+        atob(token.split('.')[1])
+      ) as JwtPayload;
+
+      return payload.role;
+    } catch (error) {
+      console.error('Unable to decode JWT:', error);
+      return null;
+    }
+  }
+
+  getUsername(): string | null {
+    const token = this.getToken();
+
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payload = JSON.parse(
+        atob(token.split('.')[1])
+      ) as JwtPayload;
+
+      return payload.sub;
+    } catch (error) {
+      console.error('Unable to decode JWT:', error);
+      return null;
+    }
+  }
+
+  getDashboardRoute(): string {
+    const role = this.getRole();
+    switch (role) {
+      case 'ADMIN':
+        return '/admin/dashboard';
+      case 'HR_ADMIN':
+        return '/hr/dashboard';
+      case 'MANAGER':
+        return '/manager/dashboard';
+      case 'EMPLOYEE':
+        return '/employee/dashboard';
+      default:
+        return '/login';
+    }
   }
 
   logout(): void {

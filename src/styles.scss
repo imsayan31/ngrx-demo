@@ -1,1 +1,68 @@
-/* You can add global styles to this file, and also import other style files */
+/* =========================================
+   Employee Management System - Theme
+   ========================================= */
+
+:root {
+  /* Brand */
+  --primary-color: #1e40af;
+  --primary-dark: #1e3a8a;
+  --primary-light: #3b82f6;
+
+  /* Layout */
+  --header-bg: #1e3a8a;
+  --sidebar-bg: #172554;
+  --sidebar-hover: #1e3a8a;
+  --sidebar-active: #2563eb;
+
+  /* Page */
+  --page-bg: #f1f5f9;
+  --card-bg: #ffffff;
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-light: #cbd5e1;
+
+  /* Borders */
+  --border-color: #e2e8f0;
+
+  /* Status */
+  --success-color: #16a34a;
+  --danger-color: #dc2626;
+  --warning-color: #d97706;
+
+  /* UI */
+  --border-radius: 10px;
+  --box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+
+/* =========================================
+   Global Reset
+   ========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--page-bg);
+  color: var(--text-primary);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}

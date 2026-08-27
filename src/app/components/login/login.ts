@@ -27,7 +27,8 @@ export class LoginComponent {
         this.message = `${response.message} login successful`;
         // We'll store the JWT here in the next step
         this.authService.saveToken(response.token);
-        this.router.navigate(["/employees"]);
+        console.log('User role:', this.authService.getRole());
+        this.router.navigate([this.authService.getDashboardRoute()]);
       },
       error: (error) => {
         console.error('Login failed:', error);

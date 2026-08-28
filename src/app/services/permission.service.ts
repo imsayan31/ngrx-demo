@@ -14,7 +14,8 @@ export class PermissionService {
 
   canViewEmployees(): boolean {
     return this.role === 'ADMIN' ||
-      this.role === 'HR_ADMIN';
+      this.role === 'HR_ADMIN' ||
+      this.role === 'MANAGER';
   }
 
   canCreateEmployee(): boolean {

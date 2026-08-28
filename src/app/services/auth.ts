@@ -2,6 +2,7 @@ import {inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {isPlatformBrowser} from '@angular/common';
+import {Router} from '@angular/router';
 
 interface LoginRequest {
   username: string;
@@ -28,7 +29,7 @@ export class AuthService {
   private apiUrl = '/api/auth';
   private platformId = inject(PLATFORM_ID);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private route: Router) {}
 
   login(username: string, password: string): Observable<LoginResponse> {
     const request: LoginRequest = {
@@ -105,6 +106,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
+    this.route.navigate(["/login"]);
   }
 
 }

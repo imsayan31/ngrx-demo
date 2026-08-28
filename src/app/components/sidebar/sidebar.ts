@@ -42,7 +42,7 @@ export class SidebarComponent {
     {
       label: 'Employees',
       route: '/employees',
-      roles: ['ADMIN', 'HR_ADMIN']
+      roles: ['ADMIN', 'HR_ADMIN', 'MANAGER']
     },
     {
       label: 'Departments',

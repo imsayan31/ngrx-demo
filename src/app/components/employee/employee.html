@@ -19,6 +19,19 @@
 
   </div>
 
+  <!-- Messages -->
+  @if (successMessage) {
+    <div class="alert success-alert">
+      ✓ {{ successMessage }}
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert error-alert">
+      ✕ {{ errorMessage }}
+    </div>
+  }
+
 
   <!-- Search -->
   <div class="search-section">
@@ -49,6 +62,15 @@
 
 
     <div class="table-container">
+
+      @if (isLoading) {
+
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <span>Loading employees...</span>
+        </div>
+
+      }
 
       <table>
 
@@ -258,11 +280,16 @@
 
             <button
               type="submit"
-              class="primary-button">
+              class="primary-button"
+              [disabled]="isSaving">
 
-              {{ editingEmployeeId !== null
-              ? 'Update Employee'
-              : 'Add Employee' }}
+              @if (isSaving) {
+                Saving...
+              } @else {
+                {{ editingEmployeeId !== null
+                ? 'Update Employee'
+                : 'Add Employee' }}
+              }
 
             </button>
 
@@ -317,9 +344,14 @@
         <button
           type="button"
           class="confirm-delete-button"
-          (click)="confirmDelete()">
+          (click)="confirmDelete()"
+          [disabled]="isDeleting">
 
-          Delete Employee
+          @if (isDeleting) {
+            Deleting...
+          } @else {
+            Delete Employee
+          }
 
         </button>
 

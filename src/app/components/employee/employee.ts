@@ -28,6 +28,13 @@ export class EmployeeComponent implements OnInit {
   filteredEmployees: Employee[] = [];
   showDeleteDialog = false;
   employeeToDelete: Employee | null = null;
+  isLoading = false;
+  isSaving = false;
+  isDeleting = false;
+
+  successMessage = '';
+  errorMessage = '';
+  private messageTimeout?: ReturnType<typeof setTimeout>;
 
   constructor(
     private employeeService: EmployeeService,
@@ -46,25 +53,52 @@ export class EmployeeComponent implements OnInit {
   }
 
   loadEmployees(): void {
-    this.employeeService.getEmployees(this.currentPage).subscribe({
-      next: (data: EmployeePage) => {
-        this.employees = data.content;
-        this.filteredEmployees = data.content;
-        this.totalPages = data.totalPages;
-        this.currentPage = data.number;
-        this.cdr.detectChanges();
-      },
-      error: (error) => console.error('Error loading employees:', error)
-    });
+
+    this.isLoading = true;
+    // this.clearMessages();
+
+    this.employeeService
+      .getEmployees(this.currentPage)
+      .subscribe({
+
+        next: (data: EmployeePage) => {
+
+          this.employees = data.content;
+          this.filteredEmployees = data.content;
+
+          this.totalPages = data.totalPages;
+          this.currentPage = data.number;
+
+          this.isLoading = false;
+
+          this.cdr.detectChanges();
+        },
+
+        error: (error) => {
+
+          console.error('Error loading employees:', error);
+
+          this.isLoading = false;
+          this.showError('Unable to load employees. Please try again.');
+        }
+
+      });
+  }
+
+  clearMessages(): void {
+    this.successMessage = '';
+    this.errorMessage = '';
   }
 
   createEmployee(): void {
+    this.clearMessages();
     if (this.employeeForm.invalid) {
       this.employeeForm.markAllAsTouched();
       return;
     }
     const employeeRequest = this.employeeForm.value;
 
+    this.isSaving = true;
     // EDIT
     if (this.editingEmployeeId !== null) {
       this.employeeService
@@ -72,6 +106,10 @@ export class EmployeeComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Employee updated:', response);
+            this.isSaving = false;
+            this.showSuccess(
+              'Employee updated successfully.'
+            );
             this.loadEmployees();
             this.closeForm();
             this.employeeForm.reset({
@@ -81,7 +119,11 @@ export class EmployeeComponent implements OnInit {
             });
             this.editingEmployeeId = null;
           },
-          error: (error) => console.error('Error updating employee:', error)
+          error: (error) => {
+            console.error('Error updating employee:', error)
+            this.isSaving = false;
+            this.showError('Unable to update employee. Please try again.');
+          }
         });
     }
     // ADD
@@ -91,6 +133,10 @@ export class EmployeeComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Employee created:', response);
+            this.isSaving = false;
+            this.showSuccess(
+              'Employee added successfully.'
+            );
             this.loadEmployees();
             this.closeForm();
             this.employeeForm.reset({
@@ -99,7 +145,11 @@ export class EmployeeComponent implements OnInit {
               salary: 0
             });
           },
-          error: (error) =>  console.error('Error creating employee:', error)
+          error: (error) =>  {
+            console.error('Error creating employee:', error)
+            this.isSaving = false;
+            this.showError('Unable to add employee. Please try again.');
+          }
         });
     }
   }
@@ -120,22 +170,47 @@ export class EmployeeComponent implements OnInit {
   }
 
   confirmDelete(): void {
+
     if (!this.employeeToDelete) {
       return;
     }
+
     const id = this.employeeToDelete.id;
+
+    this.clearMessages();
+
+    this.isDeleting = true;
+
     this.employeeService.deleteEmployee(id).subscribe({
+
       next: () => {
+
         console.log('Employee deleted:', id);
+
+        this.isDeleting = false;
+
         this.showDeleteDialog = false;
         this.employeeToDelete = null;
+
+        this.showSuccess(
+          'Employee deleted successfully.'
+        );
+
         this.loadEmployees();
       },
+
       error: (error) => {
+
         console.error('Error deleting employee:', error);
+
+        this.isDeleting = false;
+
         this.showDeleteDialog = false;
         this.employeeToDelete = null;
+
+        this.showError('Unable to delete employee. Please try again.');
       }
+
     });
   }
 
@@ -200,5 +275,40 @@ export class EmployeeComponent implements OnInit {
       employee.name.toLowerCase().includes(search) ||
       employee.dept.toLowerCase().includes(search)
     );
+  }
+
+  showSuccess(message: string): void {
+
+    this.clearMessageTimer();
+
+    this.successMessage = message;
+    this.errorMessage = '';
+    this.cdr.detectChanges();
+
+    this.messageTimeout = setTimeout(() => {
+      this.successMessage = '';
+      this.cdr.detectChanges();
+    }, 5000);
+  }
+
+  showError(message: string): void {
+
+    this.clearMessageTimer();
+
+    this.errorMessage = message;
+    this.successMessage = '';
+    this.cdr.detectChanges();
+
+    this.messageTimeout = setTimeout(() => {
+      this.errorMessage = '';
+      this.cdr.detectChanges();
+    }, 5000);
+  }
+
+  private clearMessageTimer(): void {
+
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
   }
 }

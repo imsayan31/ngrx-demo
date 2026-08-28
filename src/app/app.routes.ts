@@ -7,6 +7,7 @@ import {roleGuard} from './guards/role-guard-guard';
 import {LayoutComponent} from './components/layout/layout';
 import {HrAdminComponent} from './components/dashboards/hr-admin/hr-admin';
 import {ManagerComponent} from './components/dashboards/manager/manager';
+import {EmployeeDashboardComponent} from './components/dashboards/employee/employee';
 
 export const routes: Routes = [
 
@@ -51,6 +52,14 @@ export const routes: Routes = [
         canActivate: [roleGuard],
         data: {
           roles: ['MANAGER']
+        }
+      },
+      {
+        path: 'employee/dashboard',
+        component: EmployeeDashboardComponent,
+        canActivate: [roleGuard],
+        data: {
+          roles: ['EMPLOYEE']
         }
       },
       {

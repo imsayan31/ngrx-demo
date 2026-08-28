@@ -26,6 +26,8 @@ export class EmployeeComponent implements OnInit {
   showForm = false;
   searchText = '';
   filteredEmployees: Employee[] = [];
+  showDeleteDialog = false;
+  employeeToDelete: Employee | null = null;
 
   constructor(
     private employeeService: EmployeeService,
@@ -112,14 +114,34 @@ export class EmployeeComponent implements OnInit {
     this.showForm = true;
   }
 
-  deleteEmployee(id: number): void {
+  deleteEmployee(employee: Employee): void {
+    this.employeeToDelete = employee;
+    this.showDeleteDialog = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.employeeToDelete) {
+      return;
+    }
+    const id = this.employeeToDelete.id;
     this.employeeService.deleteEmployee(id).subscribe({
       next: () => {
         console.log('Employee deleted:', id);
+        this.showDeleteDialog = false;
+        this.employeeToDelete = null;
         this.loadEmployees();
       },
-      error: (error) => console.error('Error deleting employee:', error)
+      error: (error) => {
+        console.error('Error deleting employee:', error);
+        this.showDeleteDialog = false;
+        this.employeeToDelete = null;
+      }
     });
+  }
+
+  cancelDelete(): void {
+    this.showDeleteDialog = false;
+    this.employeeToDelete = null;
   }
 
   nextPage(): void {

@@ -102,7 +102,7 @@
                   <button
                     type="button"
                     class="delete-button"
-                    (click)="deleteEmployee(employee.id)">
+                    (click)="deleteEmployee(employee)">
                     Delete
                   </button>
 
@@ -277,3 +277,56 @@
   }
 
 </div>
+
+@if (showDeleteDialog) {
+
+  <div class="delete-overlay">
+
+    <div class="delete-dialog">
+
+      <div class="delete-icon">
+        !
+      </div>
+
+      <h2>Delete Employee?</h2>
+
+      @if (employeeToDelete) {
+
+        <p>
+          Are you sure you want to delete
+          <strong>{{ employeeToDelete.name }}</strong>?
+        </p>
+
+        <span class="delete-warning">
+          This action cannot be undone.
+        </span>
+
+      }
+
+      <div class="delete-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancelDelete()">
+
+          Cancel
+
+        </button>
+
+        <button
+          type="button"
+          class="confirm-delete-button"
+          (click)="confirmDelete()">
+
+          Delete Employee
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}

@@ -466,6 +466,121 @@ tbody tr:hover {
   opacity: 1;
 }
 
+/* =========================================
+   Delete Confirmation Dialog
+   ========================================= */
+
+.delete-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1100;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.delete-dialog {
+  width: 100%;
+  max-width: 400px;
+
+  padding: 30px;
+
+  background: white;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 15px 40px rgba(15, 23, 42, 0.25);
+
+  text-align: center;
+}
+
+.delete-icon {
+  width: 48px;
+  height: 48px;
+
+  margin: 0 auto 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fee2e2;
+
+  color: var(--danger-color);
+
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.delete-dialog h2 {
+  margin: 0 0 10px;
+
+  font-size: 20px;
+
+  color: var(--text-primary);
+}
+
+.delete-dialog p {
+  margin: 0 0 8px;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  color: var(--text-secondary);
+}
+
+.delete-warning {
+  display: block;
+
+  margin-bottom: 24px;
+
+  font-size: 12px;
+
+  color: var(--danger-color);
+}
+
+.delete-actions {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 10px;
+}
+
+.confirm-delete-button {
+  padding: 10px 16px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: var(--danger-color);
+
+  color: white;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.confirm-delete-button:hover {
+  background: #b91c1c;
+}
+
 
 /* =========================================
    Responsive

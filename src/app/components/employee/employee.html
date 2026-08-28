@@ -8,14 +8,14 @@
       <p>Manage employee information and records</p>
     </div>
 
-    <button
-      type="button"
-      class="primary-button"
-      (click)="openAddForm()">
-
-      + Add Employee
-
-    </button>
+    @if (permissionService.canCreateEmployee()) {
+      <button
+        type="button"
+        class="primary-button"
+        (click)="openAddForm()">
+        + Add Employee
+      </button>
+    }
 
   </div>
 
@@ -114,19 +114,22 @@
 
                 <div class="actions">
 
-                  <button
-                    type="button"
-                    class="edit-button"
-                    (click)="editEmployee(employee)">
-                    Edit
-                  </button>
-
-                  <button
-                    type="button"
-                    class="delete-button"
-                    (click)="deleteEmployee(employee)">
-                    Delete
-                  </button>
+                  @if (permissionService.canEditEmployee()) {
+                    <button
+                      type="button"
+                      class="edit-button"
+                      (click)="editEmployee(employee)">
+                      Edit
+                    </button>
+                  }
+                  @if (permissionService.canDeleteEmployee()) {
+                    <button
+                      type="button"
+                      class="delete-button"
+                      (click)="deleteEmployee(employee)">
+                      Delete
+                    </button>
+                  }
 
                 </div>
 

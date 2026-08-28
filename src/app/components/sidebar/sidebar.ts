@@ -25,6 +25,21 @@ export class SidebarComponent {
       roles: ['ADMIN']
     },
     {
+      label: 'Dashboard',
+      route: '/hr/dashboard',
+      roles: ['HR_ADMIN']
+    },
+    {
+      label: 'Dashboard',
+      route: '/manager/dashboard',
+      roles: ['MANAGER']
+    },
+    {
+      label: 'Dashboard',
+      route: '/employee/dashboard',
+      roles: ['EMPLOYEE']
+    },
+    {
       label: 'Employees',
       route: '/employees',
       roles: ['ADMIN', 'HR_ADMIN']

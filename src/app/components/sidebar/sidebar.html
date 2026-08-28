@@ -2,7 +2,7 @@
 
   <nav>
 
-    @for (item of visibleMenuItems; track item.label) {
+    @for (item of visibleMenuItems; track item.route) {
 
       <a
         [routerLink]="item.route"

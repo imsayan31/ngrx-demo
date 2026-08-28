@@ -6,6 +6,7 @@ import {EmployeePage} from '../../models/employee-page.model';
 import {AuthService} from '../../services/auth';
 import {Router} from '@angular/router';
 import {DecimalPipe} from '@angular/common';
+import {PermissionService} from '../../services/permission.service';
 
 @Component({
   selector: 'app-employee',
@@ -23,6 +24,7 @@ export class EmployeeComponent implements OnInit {
   totalPages: number = 0;
   authService = inject(AuthService);
   router = inject(Router);
+  permissionService = inject(PermissionService);
   showForm = false;
   searchText = '';
   filteredEmployees: Employee[] = [];

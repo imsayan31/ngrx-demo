@@ -1,33 +1,271 @@
-.login-container {
-  width: 350px;
-  margin: 80px auto;
+.login-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   padding: 30px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary-dark),
+      var(--primary-color)
+    );
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 25px;
+
+.login-container {
+  width: 100%;
+  max-width: 420px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+
+/* =========================================
+   Branding
+   ========================================= */
+
+.login-brand {
+  text-align: center;
+
+  color: white;
+
+  margin-bottom: 24px;
+}
+
+.brand-icon {
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: white;
+
+  color: var(--primary-dark);
+
+  font-size: 16px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+.login-brand h1 {
+  margin: 0;
+
+  font-size: 24px;
+
+  font-weight: 700;
+}
+
+.login-brand p {
+  margin: 4px 0 0;
+
+  font-size: 14px;
+
+  opacity: 0.8;
+}
+
+
+/* =========================================
+   Login Card
+   ========================================= */
+
+.login-card {
+  width: 100%;
+
+  padding: 32px;
+
+  background: var(--card-bg);
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 12px 35px rgba(15, 23, 42, 0.25);
+}
+
+
+/* =========================================
+   Header
+   ========================================= */
+
+.login-header {
+  margin-bottom: 26px;
+
+  text-align: center;
+}
+
+.login-header h2 {
+  margin: 0 0 7px;
+
+  font-size: 22px;
+
+  color: var(--text-primary);
+}
+
+.login-header p {
+  margin: 0;
+
+  font-size: 13px;
+
+  color: var(--text-secondary);
+}
+
+
+/* =========================================
+   Form
+   ========================================= */
 
 .form-group {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+
+  margin-bottom: 18px;
 }
 
-label {
-  display: block;
-  margin-bottom: 6px;
+.form-group label {
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: var(--text-primary);
 }
 
-input {
+.form-group input {
   width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
+
+  padding: 12px 13px;
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: var(--text-primary);
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-button {
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+.form-group input:focus {
+  border-color: var(--primary-light);
+
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+
+/* =========================================
+   Login Button
+   ========================================= */
+
+.login-button {
   width: 100%;
-  padding: 10px;
-  cursor: pointer;
+
+  margin-top: 6px;
+
+  padding: 12px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: var(--primary-color);
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease;
+}
+
+.login-button:hover {
+  background: var(--primary-light);
+}
+
+.login-button:active {
+  transform: translateY(1px);
+}
+
+
+/* =========================================
+   Login Message
+   ========================================= */
+
+.login-message {
+  margin-top: 18px;
+
+  padding: 10px 12px;
+
+  border-radius: 6px;
+
+  background: #eff6ff;
+
+  color: var(--primary-dark);
+
+  font-size: 13px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   Footer
+   ========================================= */
+
+.login-footer {
+  margin-top: 20px;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: 12px;
+
+  text-align: center;
+}
+
+
+/* =========================================
+   Responsive
+   ========================================= */
+
+@media (max-width: 480px) {
+
+  .login-page {
+    padding: 20px;
+  }
+
+  .login-card {
+    padding: 25px 20px;
+  }
+
+  .login-brand h1 {
+    font-size: 21px;
+  }
+
 }

@@ -1,14 +1,15 @@
 import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {EmployeeService} from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
-import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule} from '@angular/forms';
 import {EmployeePage} from '../../models/employee-page.model';
 import {AuthService} from '../../services/auth';
 import {Router} from '@angular/router';
+import {DecimalPipe} from '@angular/common';
 
 @Component({
   selector: 'app-employee',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, FormsModule, DecimalPipe],
   templateUrl: './employee.html',
   styleUrl: './employee.scss',
 })
@@ -22,6 +23,9 @@ export class EmployeeComponent implements OnInit {
   totalPages: number = 0;
   authService = inject(AuthService);
   router = inject(Router);
+  showForm = false;
+  searchText = '';
+  filteredEmployees: Employee[] = [];
 
   constructor(
     private employeeService: EmployeeService,
@@ -43,6 +47,7 @@ export class EmployeeComponent implements OnInit {
     this.employeeService.getEmployees(this.currentPage).subscribe({
       next: (data: EmployeePage) => {
         this.employees = data.content;
+        this.filteredEmployees = data.content;
         this.totalPages = data.totalPages;
         this.currentPage = data.number;
         this.cdr.detectChanges();
@@ -66,6 +71,7 @@ export class EmployeeComponent implements OnInit {
           next: (response) => {
             console.log('Employee updated:', response);
             this.loadEmployees();
+            this.closeForm();
             this.employeeForm.reset({
               name: '',
               department: '',
@@ -84,6 +90,7 @@ export class EmployeeComponent implements OnInit {
           next: (response) => {
             console.log('Employee created:', response);
             this.loadEmployees();
+            this.closeForm();
             this.employeeForm.reset({
               name: '',
               department: '',
@@ -102,6 +109,7 @@ export class EmployeeComponent implements OnInit {
       department: employee.dept,
       salary: employee.salary
     });
+    this.showForm = true;
   }
 
   deleteEmployee(id: number): void {
@@ -131,5 +139,44 @@ export class EmployeeComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  openAddForm(): void {
+    this.editingEmployeeId = null;
+
+    this.employeeForm.reset({
+      name: '',
+      department: '',
+      salary: 0
+    });
+
+    this.showForm = true;
+  }
+
+  closeForm(): void {
+    this.showForm = false;
+    this.editingEmployeeId = null;
+
+    this.employeeForm.reset({
+      name: '',
+      department: '',
+      salary: 0
+    });
+  }
+
+  searchEmployees(): void {
+    const search = this.searchText
+      .trim()
+      .toLowerCase();
+
+    if (!search) {
+      this.filteredEmployees = this.employees;
+      return;
+    }
+
+    this.filteredEmployees = this.employees.filter(employee =>
+      employee.name.toLowerCase().includes(search) ||
+      employee.dept.toLowerCase().includes(search)
+    );
   }
 }

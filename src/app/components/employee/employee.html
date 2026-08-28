@@ -1,52 +1,279 @@
-<button type="button" (click)="logout()">
-  Logout
-</button>
-<h2>Add Employee</h2>
-<form [formGroup]="employeeForm" (ngSubmit)="createEmployee()">
-  <div>
-    <label>Name</label>
-    <input type="text" formControlName="name">
+<div class="employee-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+
+    <div>
+      <h1>Employees</h1>
+      <p>Manage employee information and records</p>
+    </div>
+
+    <button
+      type="button"
+      class="primary-button"
+      (click)="openAddForm()">
+
+      + Add Employee
+
+    </button>
+
   </div>
 
-  <div>
-    <label>Department</label>
-    <input type="text" formControlName="department">
+
+  <!-- Search -->
+  <div class="search-section">
+
+    <input
+      type="text"
+      placeholder="Search employees..."
+      [(ngModel)]="searchText"
+      (input)="searchEmployees()"
+    />
+
   </div>
 
-  <div>
-    <label>Salary</label>
-    <input type="number" formControlName="salary">
+
+  <!-- Employee Table -->
+  <div class="employee-card">
+
+    <div class="card-header">
+
+      <div>
+        <h2>Employee List</h2>
+        <span>
+          {{ employees.length }} employees on this page
+        </span>
+      </div>
+
+    </div>
+
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Department</th>
+          <th>Salary</th>
+          <th>Actions</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+          @for (employee of filteredEmployees; track employee.id) {
+
+            <tr>
+
+              <td>{{ employee.id }}</td>
+
+              <td>
+                <div class="employee-name">
+                  {{ employee.name }}
+                </div>
+              </td>
+
+              <td>
+                <span class="department-badge">
+                  {{ employee.dept }}
+                </span>
+              </td>
+
+              <td>
+                ₹{{ employee.salary | number:'1.0-0' }}
+              </td>
+
+              <td>
+
+                <div class="actions">
+
+                  <button
+                    type="button"
+                    class="edit-button"
+                    (click)="editEmployee(employee)">
+                    Edit
+                  </button>
+
+                  <button
+                    type="button"
+                    class="delete-button"
+                    (click)="deleteEmployee(employee.id)">
+                    Delete
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          }
+
+          @if (filteredEmployees.length === 0) {
+
+            <tr>
+
+              <td
+                colspan="5"
+                class="empty-state">
+
+                No employees found.
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- Pagination -->
+
+    <div class="pagination">
+
+      <button
+        type="button"
+        (click)="previousPage()"
+        [disabled]="currentPage === 0">
+
+        ← Previous
+
+      </button>
+
+      <span>
+        Page {{ currentPage + 1 }} of {{ totalPages }}
+      </span>
+
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="currentPage >= totalPages - 1">
+
+        Next →
+
+      </button>
+
+    </div>
+
   </div>
 
-  <button type="submit">{{ editingEmployeeId ? 'Edit' : 'Add' }} Employee</button>
-</form>
 
-<table>
-  <thead>
-  <tr>
-    <th>Name</th>
-    <th>Department</th>
-    <th>Salary</th>
-    <th>Action</th>
-  </tr>
-  </thead>
-  <tbody>
-    @for (employee of employees; track $index) {
-      <tr>
-        <td>{{ employee.name }}</td>
-        <td>{{ employee.dept }}</td>
-        <td>{{ employee.salary }}</td>
-        <td>
-          <button type="button" (click)="editEmployee(employee)">Edit</button>
-          |
-          <button type="button" (click)="deleteEmployee(employee.id)">Delete</button>
-        </td>
-      </tr>
-    }
-  </tbody>
-</table>
-<div class="pagination">
-  <button type="button" (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
-  <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
-  <button type="button" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">Next</button>
+  <!-- Add / Edit Form -->
+
+  @if (showForm) {
+
+    <div class="form-overlay">
+
+      <div class="employee-form-card">
+
+        <div class="form-header">
+
+          <div>
+            <h2>
+              {{ editingEmployeeId !== null
+              ? 'Edit Employee'
+              : 'Add Employee' }}
+            </h2>
+
+            <p>
+              Enter employee information below
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="close-button"
+            (click)="closeForm()">
+
+            ×
+
+          </button>
+
+        </div>
+
+
+        <form
+          [formGroup]="employeeForm"
+          (ngSubmit)="createEmployee()">
+
+          <div class="form-group">
+
+            <label>Name</label>
+
+            <input
+              type="text"
+              formControlName="name"
+              placeholder="Enter employee name"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Department</label>
+
+            <input
+              type="text"
+              formControlName="department"
+              placeholder="Enter department"
+            />
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>Salary</label>
+
+            <input
+              type="number"
+              formControlName="salary"
+              placeholder="Enter salary"
+            />
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              type="button"
+              class="cancel-button"
+              (click)="closeForm()">
+
+              Cancel
+
+            </button>
+
+            <button
+              type="submit"
+              class="primary-button">
+
+              {{ editingEmployeeId !== null
+              ? 'Update Employee'
+              : 'Add Employee' }}
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  }
+
 </div>

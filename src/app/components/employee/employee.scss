@@ -1,29 +1,492 @@
+.employee-page {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
+/* =========================================
+   Page Header
+   ========================================= */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0 0 6px;
+
+  font-size: 30px;
+  color: var(--text-primary);
+}
+
+.page-header p {
+  margin: 0;
+
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+
+/* =========================================
+   Buttons
+   ========================================= */
+
+.primary-button {
+  border: none;
+
+  padding: 11px 18px;
+
+  border-radius: 7px;
+
+  background: var(--primary-color);
+  color: white;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  background: var(--primary-light);
+}
+
+
+/* =========================================
+   Search
+   ========================================= */
+
+.search-section {
+  margin-bottom: 18px;
+}
+
+.search-section input {
+  width: 320px;
+  padding: 11px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  background: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.search-section input:focus {
+  border-color: var(--primary-light);
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+.search-section input::placeholder {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #94a3b8;
+  opacity: 1;
+}
+
+
+/* =========================================
+   Employee Card
+   ========================================= */
+
+.employee-card {
+  background: var(--card-bg);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--border-radius);
+
+  box-shadow: var(--box-shadow);
+
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 18px 20px;
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+.card-header h2 {
+  margin: 0 0 4px;
+
+  font-size: 17px;
+}
+
+.card-header span {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+
+/* =========================================
+   Table
+   ========================================= */
+
+.table-container {
+  overflow-x: auto;
+}
+
 table {
   width: 100%;
+
   border-collapse: collapse;
-  margin-top: 20px;
+}
 
-  th,
-  td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: left;
+th {
+  padding: 14px 20px;
+
+  background: #f8fafc;
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  text-align: left;
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+td {
+  padding: 15px 20px;
+
+  font-size: 13px;
+
+  color: var(--text-primary);
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+.employee-name {
+  font-weight: 600;
+}
+
+.department-badge {
+  display: inline-block;
+
+  padding: 5px 9px;
+
+  border-radius: 5px;
+
+  background: #dbeafe;
+
+  color: var(--primary-dark);
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================
+   Actions
+   ========================================= */
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-button,
+.delete-button {
+  border: none;
+
+  padding: 6px 10px;
+
+  border-radius: 5px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.edit-button {
+  background: #dbeafe;
+  color: var(--primary-dark);
+}
+
+.edit-button:hover {
+  background: #bfdbfe;
+}
+
+.delete-button {
+  background: #fee2e2;
+  color: var(--danger-color);
+}
+
+.delete-button:hover {
+  background: #fecaca;
+}
+
+
+/* =========================================
+   Empty State
+   ========================================= */
+
+.empty-state {
+  padding: 40px;
+
+  text-align: center;
+
+  color: var(--text-secondary);
+}
+
+
+/* =========================================
+   Pagination
+   ========================================= */
+
+.pagination {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 20px;
+
+  padding: 18px;
+}
+
+.pagination button {
+  border: 1px solid var(--border-color);
+
+  padding: 7px 13px;
+
+  border-radius: 6px;
+
+  background: white;
+
+  color: var(--text-primary);
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #eff6ff;
+
+  border-color: var(--primary-light);
+
+  color: var(--primary-dark);
+}
+
+.pagination button:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 12px;
+
+  color: var(--text-secondary);
+}
+
+
+/* =========================================
+   Form Overlay
+   ========================================= */
+
+.form-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.45);
+}
+
+
+/* =========================================
+   Form Card
+   ========================================= */
+
+.employee-form-card {
+  width: 100%;
+
+  max-width: 500px;
+
+  background: white;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 15px 40px rgba(15, 23, 42, 0.25);
+
+  overflow: hidden;
+}
+
+.form-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  padding: 20px;
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+.form-header h2 {
+  margin: 0 0 5px;
+
+  font-size: 18px;
+}
+
+.form-header p {
+  margin: 0;
+
+  font-size: 12px;
+
+  color: var(--text-secondary);
+}
+
+.close-button {
+  border: none;
+
+  background: transparent;
+
+  font-size: 25px;
+
+  color: var(--text-secondary);
+
+  cursor: pointer;
+}
+
+.employee-form-card form {
+  padding: 20px;
+}
+
+.form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.form-group input {
+  padding: 11px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  outline: none;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+.form-group input::placeholder {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #94a3b8;
+  opacity: 1;
+}
+
+.form-group input:focus {
+  border-color: var(--primary-light);
+
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+
+/* =========================================
+   Form Actions
+   ========================================= */
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 10px;
+}
+
+.cancel-button {
+  padding: 10px 16px;
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 7px;
+
+  background: white;
+
+  color: var(--text-primary);
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background: #f8fafc;
+}
+
+.form-group input::placeholder {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #94a3b8;
+  opacity: 1;
+}
+
+
+/* =========================================
+   Responsive
+   ========================================= */
+
+@media (max-width: 700px) {
+
+  .page-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 15px;
   }
 
-  th {
-    font-weight: bold;
-    background-color: #f5f5f5;
+  .search-section input {
+    width: 100%;
   }
 
-  tbody {
-    tr {
-      &:nth-child(even) {
-        background-color: #fafafa;
-      }
-
-      &:hover {
-        background-color: #f0f0f0;
-      }
-    }
+  .actions {
+    flex-direction: column;
   }
+
 }

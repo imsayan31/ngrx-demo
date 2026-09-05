@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, computed, effect, inject, OnInit, signal} from '@angular/core';
 import {EmployeeService} from '../../services/employee.service';
 import { Employee } from '../../models/employee.model';
 import {ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule} from '@angular/forms';
@@ -16,7 +16,7 @@ import {PermissionService} from '../../services/permission.service';
 })
 export class EmployeeComponent implements OnInit {
 
-  employees: Employee[] = [];
+  employees = signal<Employee[]>([]);
   employeeForm: FormGroup;
   editingEmployeeId: number | null = null;
   currentPage: number = 0;
@@ -26,27 +26,72 @@ export class EmployeeComponent implements OnInit {
   router = inject(Router);
   permissionService = inject(PermissionService);
   showForm = false;
-  searchText = '';
-  filteredEmployees: Employee[] = [];
-  showDeleteDialog = false;
-  employeeToDelete: Employee | null = null;
-  isLoading = false;
-  isSaving = false;
-  isDeleting = false;
+  searchText = signal('');
+  filteredEmployees = computed(() => {
+    const search = this.searchText().toLowerCase().trim();
+    if (!search) {
+      return this.employees();
+    }
+    return this.employees().filter((employee: Employee) =>
+      employee.name.toLowerCase().includes(search) ||
+      employee.dept.toLowerCase().includes(search)
+    );
+  });
+  showDeleteDialog = signal(false);
+  employeeToDelete = signal<Employee | null>(null);
+  isLoading = signal(false);
+  isSaving = signal(false);
+  isDeleting = signal(false);
 
-  successMessage = '';
-  errorMessage = '';
+  signal1 = signal(10);
+  signal2 = signal(20);
+  signal3 = signal(30);
+  signal4 = signal(40);
+  signal5 = signal(50);
+
+  updateSignal1(): void {
+    this.signal1.update(value => value * 2);
+  }
+  updateSignal2(): void {
+    this.signal2.update(value => value * 2);
+  }
+  updateSignal3(): void {
+    this.signal3.update(value => value * 2);
+  }
+  updateSignal4(): void {
+    this.signal4.update(value => value * 2);
+  }
+  updateSignal5(): void {
+    this.signal5.update(value => value * 2);
+  }
+
+
+  successMessage = signal('');
+  errorMessage = signal('');
   private messageTimeout?: ReturnType<typeof setTimeout>;
 
   constructor(
     private employeeService: EmployeeService,
-    private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private fb: FormBuilder
   ) {
     this.employeeForm = this.fb.group({
       name: ['', Validators.required],
       department: ['', Validators.required],
       salary: [0, [Validators.required, Validators.min(1)]]
+    });
+
+    effect(() => {
+      console.log('Signal 1:', this.signal1());
+      console.log('Signal 3:', this.signal3());
+      console.log('Signal 4:', this.signal4());
+    });
+
+    effect(() => {
+      console.log('Signal 2:', this.signal2());
+    });
+
+    effect(() => {
+      console.log('Signal 5:', this.signal5());
     });
   }
 
@@ -55,41 +100,28 @@ export class EmployeeComponent implements OnInit {
   }
 
   loadEmployees(): void {
-
-    this.isLoading = true;
+    this.isLoading.set(true);
     // this.clearMessages();
-
     this.employeeService
       .getEmployees(this.currentPage)
       .subscribe({
-
         next: (data: EmployeePage) => {
-
-          this.employees = data.content;
-          this.filteredEmployees = data.content;
-
+          this.employees.set(data.content);
           this.totalPages = data.totalPages;
           this.currentPage = data.number;
-
-          this.isLoading = false;
-
-          this.cdr.detectChanges();
+          this.isLoading.set(false);
         },
-
         error: (error) => {
-
           console.error('Error loading employees:', error);
-
-          this.isLoading = false;
+          this.isLoading.set(false);
           this.showError('Unable to load employees. Please try again.');
         }
-
       });
   }
 
   clearMessages(): void {
-    this.successMessage = '';
-    this.errorMessage = '';
+    this.successMessage.set('');
+    this.errorMessage.set('');
   }
 
   createEmployee(): void {
@@ -100,7 +132,7 @@ export class EmployeeComponent implements OnInit {
     }
     const employeeRequest = this.employeeForm.value;
 
-    this.isSaving = true;
+    this.isSaving.set(true);
     // EDIT
     if (this.editingEmployeeId !== null) {
       this.employeeService
@@ -108,7 +140,7 @@ export class EmployeeComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Employee updated:', response);
-            this.isSaving = false;
+            this.isSaving.set(false);
             this.showSuccess(
               'Employee updated successfully.'
             );
@@ -123,7 +155,7 @@ export class EmployeeComponent implements OnInit {
           },
           error: (error) => {
             console.error('Error updating employee:', error)
-            this.isSaving = false;
+            this.isSaving.set(false);
             this.showError('Unable to update employee. Please try again.');
           }
         });
@@ -135,7 +167,7 @@ export class EmployeeComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Employee created:', response);
-            this.isSaving = false;
+            this.isSaving.set(false);
             this.showSuccess(
               'Employee added successfully.'
             );
@@ -149,7 +181,7 @@ export class EmployeeComponent implements OnInit {
           },
           error: (error) =>  {
             console.error('Error creating employee:', error)
-            this.isSaving = false;
+            this.isSaving.set(false);
             this.showError('Unable to add employee. Please try again.');
           }
         });
@@ -167,8 +199,8 @@ export class EmployeeComponent implements OnInit {
   }
 
   deleteEmployee(employee: Employee): void {
-    this.employeeToDelete = employee;
-    this.showDeleteDialog = true;
+    this.employeeToDelete.set(employee);
+    this.showDeleteDialog.set(true);
   }
 
   confirmDelete(): void {
@@ -177,11 +209,11 @@ export class EmployeeComponent implements OnInit {
       return;
     }
 
-    const id = this.employeeToDelete.id;
+    const id = this.employeeToDelete()!.id;
 
     this.clearMessages();
 
-    this.isDeleting = true;
+    this.isDeleting.set(true);
 
     this.employeeService.deleteEmployee(id).subscribe({
 
@@ -189,10 +221,10 @@ export class EmployeeComponent implements OnInit {
 
         console.log('Employee deleted:', id);
 
-        this.isDeleting = false;
+        this.isDeleting.set(false);
 
-        this.showDeleteDialog = false;
-        this.employeeToDelete = null;
+        this.showDeleteDialog.set(false);
+        this.employeeToDelete.set(null);
 
         this.showSuccess(
           'Employee deleted successfully.'
@@ -205,10 +237,10 @@ export class EmployeeComponent implements OnInit {
 
         console.error('Error deleting employee:', error);
 
-        this.isDeleting = false;
+        this.isDeleting.set(false);
 
-        this.showDeleteDialog = false;
-        this.employeeToDelete = null;
+        this.showDeleteDialog.set(false);
+        this.employeeToDelete.set(null);
 
         this.showError('Unable to delete employee. Please try again.');
       }
@@ -217,8 +249,8 @@ export class EmployeeComponent implements OnInit {
   }
 
   cancelDelete(): void {
-    this.showDeleteDialog = false;
-    this.employeeToDelete = null;
+    this.showDeleteDialog.set(false);
+    this.employeeToDelete.set(null);
   }
 
   nextPage(): void {
@@ -263,52 +295,30 @@ export class EmployeeComponent implements OnInit {
     });
   }
 
-  searchEmployees(): void {
-    const search = this.searchText
-      .trim()
-      .toLowerCase();
-
-    if (!search) {
-      this.filteredEmployees = this.employees;
-      return;
-    }
-
-    this.filteredEmployees = this.employees.filter(employee =>
-      employee.name.toLowerCase().includes(search) ||
-      employee.dept.toLowerCase().includes(search)
-    );
+  searchEmployees(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchText.set(value);
   }
 
   showSuccess(message: string): void {
-
     this.clearMessageTimer();
-
-    this.successMessage = message;
-    this.errorMessage = '';
-    this.cdr.detectChanges();
-
+    this.successMessage.set(message);
+    this.errorMessage.set('');
     this.messageTimeout = setTimeout(() => {
-      this.successMessage = '';
-      this.cdr.detectChanges();
+      this.successMessage.set('');
     }, 5000);
   }
 
   showError(message: string): void {
-
     this.clearMessageTimer();
-
-    this.errorMessage = message;
-    this.successMessage = '';
-    this.cdr.detectChanges();
-
+    this.errorMessage.set(message);
+    this.successMessage.set('');
     this.messageTimeout = setTimeout(() => {
-      this.errorMessage = '';
-      this.cdr.detectChanges();
+      this.errorMessage.set('');
     }, 5000);
   }
 
   private clearMessageTimer(): void {
-
     if (this.messageTimeout) {
       clearTimeout(this.messageTimeout);
     }

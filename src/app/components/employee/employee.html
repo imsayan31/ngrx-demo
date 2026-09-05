@@ -20,15 +20,15 @@
   </div>
 
   <!-- Messages -->
-  @if (successMessage) {
+  @if (successMessage()) {
     <div class="alert success-alert">
-      ✓ {{ successMessage }}
+      ✓ {{ successMessage() }}
     </div>
   }
 
-  @if (errorMessage) {
+  @if (errorMessage()) {
     <div class="alert error-alert">
-      ✕ {{ errorMessage }}
+      ✕ {{ errorMessage() }}
     </div>
   }
 
@@ -40,7 +40,7 @@
       type="text"
       placeholder="Search employees..."
       [(ngModel)]="searchText"
-      (input)="searchEmployees()"
+      (input)="searchEmployees($event)"
     />
 
   </div>
@@ -63,7 +63,7 @@
 
     <div class="table-container">
 
-      @if (isLoading) {
+      @if (isLoading()) {
 
         <div class="loading-state">
           <div class="spinner"></div>
@@ -72,10 +72,19 @@
 
       }
 
+      <!--<h2>{{ signal1() }}</h2>
+      <h2>{{ signal2() }}</h2>
+      <h2>{{ signal3() }}</h2>
+      <h2>{{ signal4() }}</h2>
+      <h2>{{ signal5() }}</h2>
+      <button (click)="updateSignal1()">Update signal 1</button>
+      <button (click)="updateSignal2()">Update signal 2</button>
+      <button (click)="updateSignal3()">Update signal 3</button>
+      <button (click)="updateSignal4()">Update signal 4</button>
+      <button (click)="updateSignal5()">Update signal 5</button>-->
+
       <table>
-
         <thead>
-
         <tr>
           <th>ID</th>
           <th>Name</th>
@@ -83,37 +92,26 @@
           <th>Salary</th>
           <th>Actions</th>
         </tr>
-
         </thead>
-
         <tbody>
-
-          @for (employee of filteredEmployees; track employee.id) {
-
+          @for (employee of filteredEmployees(); track employee.id) {
             <tr>
-
               <td>{{ employee.id }}</td>
-
               <td>
                 <div class="employee-name">
                   {{ employee.name }}
                 </div>
               </td>
-
               <td>
                 <span class="department-badge">
                   {{ employee.dept }}
                 </span>
               </td>
-
               <td>
                 ₹{{ employee.salary | number:'1.0-0' }}
               </td>
-
               <td>
-
                 <div class="actions">
-
                   @if (permissionService.canEditEmployee()) {
                     <button
                       type="button"
@@ -130,35 +128,17 @@
                       Delete
                     </button>
                   }
-
                 </div>
-
               </td>
-
             </tr>
-
           }
-
-          @if (filteredEmployees.length === 0) {
-
+          @if (filteredEmployees().length === 0) {
             <tr>
-
-              <td
-                colspan="5"
-                class="empty-state">
-
-                No employees found.
-
-              </td>
-
+              <td colspan="5" class="empty-state">No employees found.</td>
             </tr>
-
           }
-
         </tbody>
-
       </table>
-
     </div>
 
 
@@ -284,9 +264,9 @@
             <button
               type="submit"
               class="primary-button"
-              [disabled]="isSaving">
+              [disabled]="isSaving()">
 
-              @if (isSaving) {
+              @if (isSaving()) {
                 Saving...
               } @else {
                 {{ editingEmployeeId !== null
@@ -308,49 +288,36 @@
 
 </div>
 
-@if (showDeleteDialog) {
-
+@if (showDeleteDialog()) {
   <div class="delete-overlay">
-
     <div class="delete-dialog">
-
       <div class="delete-icon">
         !
       </div>
-
       <h2>Delete Employee?</h2>
-
-      @if (employeeToDelete) {
-
+      @if (employeeToDelete()) {
         <p>
           Are you sure you want to delete
-          <strong>{{ employeeToDelete.name }}</strong>?
+          <strong>{{ employeeToDelete()!.name }}</strong>?
         </p>
-
         <span class="delete-warning">
           This action cannot be undone.
         </span>
-
       }
 
       <div class="delete-actions">
-
         <button
           type="button"
           class="cancel-button"
-          (click)="cancelDelete()">
-
-          Cancel
-
-        </button>
+          (click)="cancelDelete()">Cancel</button>
 
         <button
           type="button"
           class="confirm-delete-button"
           (click)="confirmDelete()"
-          [disabled]="isDeleting">
+          [disabled]="isDeleting()">
 
-          @if (isDeleting) {
+          @if (isDeleting()) {
             Deleting...
           } @else {
             Delete Employee
